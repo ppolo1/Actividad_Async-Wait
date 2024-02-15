@@ -5,17 +5,22 @@ https://api.openweathermap.org/data/2.5/weather?q=Galapagar&appid=86d830bb22abc9
 
 let appid = "86d830bb22abc9b1b3fe4fb21a030040" ;
 let urlWeather ="";
+let xhr ;
 
-document.getElementById("botonTiempo").addEventListener("click", () => {
-    cargaCiudad()
-        .then(cargarXML)
-        .catch(() => {
-            document.getElementById("demo").innerHTML = "" ; // Limpia la tabla
-            document.getElementById("error").innerHTML = "Ciudad no encontrada" ; // Muestra el error
-        })
+document.getElementById("botonTiempo").addEventListener("click", async () =>{
+
+    try {
+        await cargaCiudad() ;
+        cargarXML(xhr.responseXML) ;
+    } 
+    catch(e) {
+        document.getElementById("demo").innerHTML = "" ; // Limpia la tabla
+        document.getElementById("error").innerHTML = "Ciudad no encontrada" ; // Muestra el error
+    }
 }) ;
 
-function cargaCiudad() {
+
+async function cargaCiudad() {
     
   const promesa = new Promise((resolve, reject) => {
       
@@ -24,7 +29,7 @@ function cargaCiudad() {
 
     urlWeather =`https://api.openweathermap.org/data/2.5/weather?q=${ciudad}&appid=${appid}&units=metric&mode=xml`;
 
-    let xhr = new XMLHttpRequest() ;
+    xhr = new XMLHttpRequest() ;
 
     xhr.onreadystatechange = function() {
         
@@ -50,9 +55,9 @@ function cargaCiudad() {
   return promesa ;
 }
 
-function cargarXML(xml) {
+function cargarXML() {
     
-    let docXML = xml.responseXML ;
+    let docXML = xhr.responseXML ;
 
     let table = "" ;
 
